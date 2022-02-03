@@ -1,74 +1,39 @@
 package com.example.movieTheatre.MovieTheatreManagement.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Table(name = "movie")
-public class Movie {
+@Getter
+@Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "theatres"})
+public class Movie implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int m_id;
 
     @Column(name = "m_name")
+    @NotBlank
     private String m_name;
 
     @Column(name = "actor")
+    @NotBlank
     private String actor;
 
     @Column(name = "duration")
+    @Min(value = 1)
     private int duration;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "theatre_has_movie", joinColumns = {@JoinColumn(name = "m_id")}, inverseJoinColumns = {@JoinColumn(name = "t_id")})
     private Set<Theatre> theatres;
-
-    public Movie() {
-    }
-
-    public Movie(String m_name, String actor, int duration) {
-        this.m_name = m_name;
-        this.actor = actor;
-        this.duration = duration;
-    }
-
-    public Set<Theatre> getTheatres() {
-        return theatres;
-    }
-
-    public void setTheatres(Set<Theatre> theatres) {
-        this.theatres = theatres;
-    }
-
-    public int getM_id() {
-        return m_id;
-    }
-
-    public void setM_id(int m_id) {
-        this.m_id = m_id;
-    }
-
-    public String getM_name() {
-        return m_name;
-    }
-
-    public void setM_name(String m_name) {
-        this.m_name = m_name;
-    }
-
-    public String getActor() {
-        return actor;
-    }
-
-    public void setActor(String actor) {
-        this.actor = actor;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
 }

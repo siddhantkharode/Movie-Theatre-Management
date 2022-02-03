@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,38 +23,32 @@ public class TheatreController {
     }
 
     @GetMapping("/theatre/{t_id}")
-    public ResponseEntity<Theatre> getTheatre(@PathVariable("t_id") int t_id){
-        Theatre theatre = theatreService.getTheatreById(t_id);
-        return new ResponseEntity<>(theatre, HttpStatus.OK);
+    public ResponseEntity getTheatre(@PathVariable("t_id") int t_id){
+        return theatreService.getTheatreById(t_id);
     }
 
     @DeleteMapping("/theatre/{t_id}")
-    public ResponseEntity<HttpStatus> deleteTheatre(@PathVariable("t_id") int t_id){
-        theatreService.deleteTheatreById(t_id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity deleteTheatre(@PathVariable("t_id") int t_id){
+        return theatreService.deleteTheatreById(t_id);
     }
 
     @PostMapping("/theatre/add")
-    public ResponseEntity<Theatre> saveTheatre(@RequestBody Theatre theatre){
-        theatreService.addTheatre(theatre);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity saveTheatre(@Valid @RequestBody Theatre theatre){
+        return theatreService.addTheatre(theatre);
     }
 
     @PutMapping("/theatre/edit/{t_id}")
-    public ResponseEntity<Theatre> updateTheatre(@PathVariable("t_id") int t_id, @RequestBody Theatre theatre){
-        Theatre _theatre = theatreService.updateTheatreById(t_id, theatre);
-        return new ResponseEntity<>(_theatre, HttpStatus.OK);
+    public ResponseEntity updateTheatre(@PathVariable("t_id") int t_id, @Valid @RequestBody Theatre theatre){
+        return theatreService.updateTheatreById(t_id, theatre);
     }
 
     @PostMapping("/theatre/{t_id}/movie/{m_id}")
-    public ResponseEntity<HttpStatus> addMovieToTheatre(@PathVariable("t_id") int t_id, @PathVariable("m_id") int m_id) {
-        theatreService.addMovieToTheatre(t_id, m_id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity addMovieToTheatre(@PathVariable("t_id") int t_id, @PathVariable("m_id") int m_id) {
+        return theatreService.addMovieToTheatre(t_id, m_id);
     }
 
     @DeleteMapping("/theatre/{t_id}/movie/{m_id}")
-    public ResponseEntity<HttpStatus> deleteMovieFromTheatre(@PathVariable("t_id") int t_id, @PathVariable("m_id") int m_id) {
-        theatreService.deleteMovieFromTheatre(t_id,m_id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity deleteMovieFromTheatre(@PathVariable("t_id") int t_id, @PathVariable("m_id") int m_id) {
+        return theatreService.deleteMovieFromTheatre(t_id, m_id);
     }
 }
