@@ -49,12 +49,30 @@ public class TheatreService {
     }
 
     public ResponseEntity addTheatre(Theatre theatre) {
+
+        int length = theatre.getT_name().length();
+        for(int i = 0; i < length; i++){
+            if(Character.isDigit(theatre.getT_name().charAt(i))) {
+                CustomResponse res = new CustomResponse(new Date(), "theatre name should not contain digits", HttpStatus.BAD_REQUEST, "/theatre/add");
+                return new ResponseEntity(res, HttpStatus.BAD_REQUEST);
+            }
+        }
+
         theatreRepository.save(theatre);
         CustomResponse res = new CustomResponse(new Date(), "theatre successfully added", HttpStatus.CREATED, "/theatre/add");
         return new ResponseEntity(res, HttpStatus.CREATED);
     }
 
     public ResponseEntity updateTheatreById(int t_id, Theatre theatre) {
+
+        int length = theatre.getT_name().length();
+        for(int i = 0; i < length; i++){
+            if(Character.isDigit(theatre.getT_name().charAt(i))) {
+                CustomResponse res = new CustomResponse(new Date(), "theatre name should not contain digits", HttpStatus.BAD_REQUEST, "/theatre/add");
+                return new ResponseEntity(res, HttpStatus.BAD_REQUEST);
+            }
+        }
+
         try {
             Theatre _theatre = theatreRepository.findById(t_id).get();
             _theatre.setT_name(theatre.getT_name());

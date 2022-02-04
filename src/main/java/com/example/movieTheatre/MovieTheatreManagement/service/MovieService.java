@@ -47,12 +47,30 @@ public class MovieService {
     }
 
     public ResponseEntity addMovie(Movie movie) {
+
+        int length = movie.getM_name().length();
+        for(int i = 0; i < length; i++){
+            if(Character.isDigit(movie.getM_name().charAt(i))) {
+                CustomResponse res = new CustomResponse(new Date(), "movie name should not contain digits", HttpStatus.BAD_REQUEST, "/movie/add");
+                return new ResponseEntity(res, HttpStatus.BAD_REQUEST);
+            }
+        }
+
         movieRepository.save(movie);
         CustomResponse res = new CustomResponse(new Date(), "movie successfully added", HttpStatus.CREATED, "/movie/add");
         return new ResponseEntity(res, HttpStatus.CREATED);
     }
 
     public ResponseEntity updateMovieById(int m_id, Movie movie) {
+
+        int length = movie.getM_name().length();
+        for(int i = 0; i < length; i++){
+            if(Character.isDigit(movie.getM_name().charAt(i))) {
+                CustomResponse res = new CustomResponse(new Date(), "movie name should not contain digits", HttpStatus.BAD_REQUEST, "/movie/add");
+                return new ResponseEntity(res, HttpStatus.BAD_REQUEST);
+            }
+        }
+
         try {
             Movie _movie = movieRepository.findById(m_id).get();
             _movie.setM_name(movie.getM_name());
