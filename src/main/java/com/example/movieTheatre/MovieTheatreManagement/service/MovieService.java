@@ -18,12 +18,21 @@ public class MovieService {
     @Autowired
     MovieRepository movieRepository;
 
+    /**
+     * This method is used to return all the movies in the database.
+     * @return List of all movies.
+     */
     public List<Movie> getAllMovies() {
         List<Movie> movies = new ArrayList<Movie>();
         movieRepository.findAll().forEach(movie -> movies.add(movie));
         return movies;
     }
 
+    /**
+     * This method is used to return details of a movie.
+     * @param m_id {movie id}
+     * @return movie name, actor name and duration of movie in minutes.
+     */
     public ResponseEntity getMovieById(int m_id){
         Optional<Movie> movie = movieRepository.findById(m_id);
 
@@ -35,6 +44,10 @@ public class MovieService {
         }
     }
 
+    /**
+     * This method is used to delete a movie from database.
+     * @param m_id {movie id}
+     */
     public ResponseEntity deleteMovieById(int m_id) {
         try {
             movieRepository.deleteById(m_id);
@@ -46,12 +59,27 @@ public class MovieService {
         return new ResponseEntity(res,HttpStatus.OK);
     }
 
+    /**
+     * This method is used to add movie to database.
+     * The user has to pass movie name, actor name and duration in the request body to successfully add a movie.
+     * @param movie {@link Movie}
+     */
     public ResponseEntity addMovie(Movie movie) {
 
+        // Check whether movie name has digits.
         int length = movie.getM_name().length();
         for(int i = 0; i < length; i++){
             if(Character.isDigit(movie.getM_name().charAt(i))) {
                 CustomResponse res = new CustomResponse(new Date(), "movie name should not contain digits", HttpStatus.BAD_REQUEST, "/movie/add");
+                return new ResponseEntity(res, HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        // Check whether actor name has digits.
+        length = movie.getActor().length();
+        for(int i = 0; i < length; i++){
+            if(Character.isDigit(movie.getActor().charAt(i))) {
+                CustomResponse res = new CustomResponse(new Date(), "actor name should not contain digits", HttpStatus.BAD_REQUEST, "/movie/add");
                 return new ResponseEntity(res, HttpStatus.BAD_REQUEST);
             }
         }
@@ -61,12 +89,28 @@ public class MovieService {
         return new ResponseEntity(res, HttpStatus.CREATED);
     }
 
+    /**
+     * This method is used to update details of existing movie.
+     * The user has to pass movie name, actor name, duration in request body to successfully update a record.
+     * @param m_id {movie id}
+     * @param movie {@link Movie}
+     */
     public ResponseEntity updateMovieById(int m_id, Movie movie) {
 
+        // Check whether movie name has digits.
         int length = movie.getM_name().length();
         for(int i = 0; i < length; i++){
             if(Character.isDigit(movie.getM_name().charAt(i))) {
                 CustomResponse res = new CustomResponse(new Date(), "movie name should not contain digits", HttpStatus.BAD_REQUEST, "/movie/add");
+                return new ResponseEntity(res, HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        // Check whether actor name has digits.
+        length = movie.getActor().length();
+        for(int i = 0; i < length; i++){
+            if(Character.isDigit(movie.getActor().charAt(i))) {
+                CustomResponse res = new CustomResponse(new Date(), "actor name should not contain digits", HttpStatus.BAD_REQUEST, "/movie/add");
                 return new ResponseEntity(res, HttpStatus.BAD_REQUEST);
             }
         }

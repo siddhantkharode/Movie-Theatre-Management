@@ -20,12 +20,21 @@ public class TheatreService {
     @Autowired
     MovieRepository movieRepository;
 
+    /**
+     * This method is used to return hte details of all the theatres in the database.
+     * @return List of all theatres.
+     */
     public List<Theatre> getAllTheatres() {
         List<Theatre> theatres = new ArrayList<Theatre>();
         theatreRepository.findAll().forEach(theatre -> theatres.add(theatre));
         return theatres;
     }
 
+    /**
+     * This method is used to return details of a theatre.
+     * @param t_id {theatre id}
+     * @return theatre name, number of shows, address and the movies in that theatre.
+     */
     public ResponseEntity getTheatreById(int t_id){
         Optional<Theatre> theatre = theatreRepository.findById(t_id);
 
@@ -37,8 +46,17 @@ public class TheatreService {
         }
     }
 
+    /**
+     * This method is used to delete a theatre from database.
+     * @param t_id {theatre id}
+     */
     public ResponseEntity deleteTheatreById(int t_id) {
         try {
+            Theatre _theatre = theatreRepository.getById(t_id);
+            Set<Movie> theatreSet = _theatre.getMovies();
+            for (Movie movie: theatreSet) {
+                movie.getTheatres().remove(_theatre);
+            }
             theatreRepository.deleteById(t_id);
         } catch (Exception e) {
             CustomResponse res = new CustomResponse(new Date(), "id not found", HttpStatus.NOT_FOUND, "/theatre/" + t_id);
@@ -48,8 +66,14 @@ public class TheatreService {
         return new ResponseEntity(res,HttpStatus.OK);
     }
 
+    /**
+     * This method is used to add theatre to database.
+     * The user has to pass theatre name, no. of shows and address in the request body to successfully add a theatre.
+     * @param theatre {@link Theatre}
+     */
     public ResponseEntity addTheatre(Theatre theatre) {
 
+        // Check whether theatre name has digits
         int length = theatre.getT_name().length();
         for(int i = 0; i < length; i++){
             if(Character.isDigit(theatre.getT_name().charAt(i))) {
@@ -63,8 +87,15 @@ public class TheatreService {
         return new ResponseEntity(res, HttpStatus.CREATED);
     }
 
+    /**
+     * This method is used to update details of existing theatre.
+     * The user has to pass theatre name, no. of shows and address in request body to successfully update a record.
+     * @param t_id {theatre id}
+     * @param theatre {@link Theatre}
+     */
     public ResponseEntity updateTheatreById(int t_id, Theatre theatre) {
 
+        // Check whether theatre name has digits.
         int length = theatre.getT_name().length();
         for(int i = 0; i < length; i++){
             if(Character.isDigit(theatre.getT_name().charAt(i))) {
@@ -87,6 +118,11 @@ public class TheatreService {
         }
     }
 
+    /**
+     * This method is used to add movie to a theatre.
+     * @param t_id {theatre id}
+     * @param m_id {movie id}
+     */
     public ResponseEntity addMovieToTheatre(int t_id, int m_id) {
         try {
             Theatre _theatre = theatreRepository.findById(t_id).get();
@@ -108,6 +144,11 @@ public class TheatreService {
         }
     }
 
+    /**
+     * This method is used to delete movie from a theatre.
+     * @param t_id {theatre id}
+     * @param m_id {method id}
+     */
     public ResponseEntity deleteMovieFromTheatre(int t_id, int m_id) {
         try {
             Theatre _theatre = theatreRepository.getById(t_id);

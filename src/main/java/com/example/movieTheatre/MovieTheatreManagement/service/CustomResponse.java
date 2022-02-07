@@ -7,6 +7,10 @@ import org.springframework.http.HttpStatus;
 
 import java.util.Date;
 
+/**
+ * This class is used while returning response for API calls.
+ */
+
 @Getter
 @Setter
 @AllArgsConstructor
